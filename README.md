@@ -89,6 +89,40 @@ Mindkét parancsot a `*/alms-client` directory-ban lehet elindítani
 
 A Raspberry Pi-ok headless Ubuntu-t használnak, megadott image alapján
 
+## Image-k
+
+### Image készítése működő PI-ból
+Linuxon:
+
+```
+sudo dd bs=4M if=/dev/sde of=./MyImage.img
+```
+
+Az `if` (input file) után a mountolt SD kártya nevét kell írni, az `of` (output file) után pedig a létrehozandó image nevét (./név.img esetén a megnyitott directoryba fogja létrehozni)
+
+**Az image készítés akár 10+ percet is igénybe vehet és 32GB szabad helyet foglal el a célmappában**
+
+[További információk az image készítésről](https://raspberrytips.com/create-image-sd-card/)
+
+### Image új SD kártyára másolása
+
+Az image leendő helyének meghatározására és a rajta lévő partíciók unmount-olása és az image másolása az SD kártya behelyezése után:
+
+```
+sudo fdisk -l
+
+sudo umount /dev/sdx*
+
+sudo dd bs=1M if=MyImage.img of=/dev/sdx
+```
+A `/dev/sdx`-et az SD kártya helyével kell helyettesíteni, a `MyImage.img`-t pedig a létrehozott image nevével              
+
+**A felmásolásd akár 10+ percet is igénybe vehet**
+
+[További információk az image másolásról](https://raspberrypi.stackexchange.com/questions/931/how-do-i-install-an-os-image-onto-an-sd-card)
+
+## Konfiguráció
+
 A fő python program (`git-repo-name/software/main.py`) egy config file-ból kapja meg a backend IP-jét, a kamera tulajdonságait és még néhány információt. Ez a `git-repo-name/software/lib/config/rpi.config` file-ban található.
 
 # Automatikus indítás
@@ -116,4 +150,4 @@ ExecStart=/usr/bin/dotnet run --project /home/tk/Documents/plm/plm-ssp/src/Api
 
 [Install]
 WantedBy=multi-user.target
-```
+```     
